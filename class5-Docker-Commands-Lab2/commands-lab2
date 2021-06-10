@@ -15,10 +15,6 @@ To remove all docker images in a single command,
 
 *********************************************************************
 
-what is dangling images
-
-*************************************************************
-
 Remove all exited containers
 You can locate containers using docker ps -a and filter them by their status: created, restarting, running, paused, or exited. To review the list of exited containers, use the -f flag to filter based on status. When you've verified you want to remove those containers, using -q to pass the IDs to the docker rm command.
 
@@ -30,8 +26,9 @@ Remove:
 
 docker rm $(docker ps -a -f status=exited -q)
 
-Remove containers using more than one filter
-Docker filters can be combined by repeating the filter flag with an additional value. This results in a list of containers that meet either condition. For example, if you want to delete all containers marked as either Created (a state which can result when you run a container with an invalid command) or Exited, you can use two filters:
+Remove containers using more than one filter.Docker filters can be combined by repeating the filter flag with an additional value. 
+This results in a list of containers that meet either condition. 
+For example, if you want to delete all containers marked as either Created (a state which can result when you run a container with an invalid command) or Exited, you can use two filters:
 
 
 List:
