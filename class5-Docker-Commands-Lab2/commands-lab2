@@ -30,7 +30,8 @@ docker rm $(docker ps -a -f status=exited -q)
 
 Remove containers using more than one filter.Docker filters can be combined by repeating the filter flag with an additional value. 
 This results in a list of containers that meet either condition. 
-For example, if you want to delete all containers marked as either Created (a state which can result when you run a container with an invalid command) or Exited, you can use two filters:
+For example, if you want to delete all containers marked as either Created (a state which can result when you run a container with an invalid command) or Exited, 
+you can use two filters:
 
 *******************************************************************************************************************************
 List:
