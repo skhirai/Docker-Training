@@ -1,65 +1,3 @@
-Downloading image
-Let’s say you need to pull the docker image from dockerhub (docker repository). The following example of pulling the Apache HTTP server image.
-
-docker pull httpd
-
-Images
-List all the docker images pulled on the system with image details such as TAG/IMAGE ID/SIZE etc.
-
-docker images
-
-*******************************************************************************************************************************
-Run
-Run the docker image mentioned in the command. This command will create a docker container in which the Apache HTTP server will run.
-
-docker run -it -d httpd
-
-
-*******************************************************************************************************************************
-What’s running?
-ps lists all the docker containers are running with container details.
-
-docker ps
-
-*******************************************************************************************************************************
-ps -a
-List all the docker containers running/exited/stopped with container details.
-
-docker ps -a
-
-*******************************************************************************************************************************
-exec
-Access the docker container and run commands inside the container. I am accessing the apache server container in this example.
-
-docker ps -a
-
-docker exec -it <container ID> bash
-
-root@09ca6feb6efc:/usr/local/apache2# ls
-
-bin  build  cgi-bin  conf  error  htdocs  icons  include  logs                modules
-
-root@09ca6feb6efc:/usr/local/apache2#
-
-*******************************************************************************************************************************
-Removing container
-
-docker ps -a
-
-
-Remove the docker container with container id mentioned in the command.
-
-docker rm <Container ID>
-
-
-*******************************************************************************************************************************
-
-Removing image
-Remove the docker image with the docker image id mentioned in the command
-
-docker images
-
-docker rmi <image ID>
 
 *******************************************************************************************************************************
 
@@ -203,7 +141,8 @@ where it stores the data produced inside the virtual environment.
 To run a container and mount a data volume to it, follow the basic syntax:
 
 docker run --mount source=[volume_name],destination=[path_in_container] [docker_image]
-Replace [path_in_container] with the path where you want to place the data volume in the container. Everything stored in that directory automatically gets saved on the data volume on the host as well.
+Replace [path_in_container] with the path where you want to place the data volume in the container. Everything stored in that directory automatically 
+gets saved on the data volume on the host as well.
 
 For example, to launch an Ubuntu container and mount the data volume to it, run:
 
