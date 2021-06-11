@@ -187,6 +187,62 @@ docker update --help
 Creating volume
 Create a volume which docker container will use to store data.
 
-docker volume create
+docker volume create <volume name>
+
+docker volume create data
+*************************************************************
+List Docker Volumes
+
+To verify you have successfully created a Docker volume, prompt Docker to list all available volumes with:
+
+docker volume list
+*************************************************************
+
+Inspecting Docker Volumes
+To see more information about a Docker volume, use the inspect command:
+
+docker volume inspect [volume_name]
+*************************************************************
+Mounting a Data Volume
+
+To mount a data volume to a container add the --mount flag to the docker run command. It adds the volume to the specified container,
+where it stores the data produced inside the virtual environment.
+
+To run a container and mount a data volume to it, follow the basic syntax:
+
+docker run --mount source=[volume_name],destination=[path_in_container] [docker_image]
+Replace [path_in_container] with the path where you want to place the data volume in the container. Everything stored in that directory automatically gets saved on the data volume on the host as well.
+
+For example, to launch an Ubuntu container and mount the data volume to it, run:
+
+docker run -it --name=example1 --mount source=data,destination=/data ubuntu
 
 *************************************************************
+
+Copying Files Between Containers From a Shared Volume
+Let’s see how Docker volumes allow you to share files between containers.
+
+To do so, we use the volume and container created in the previous section. This included running the commands:
+
+docker volume create data
+docker run -it --name=example1 --mount source=data,destination=/data ubuntu
+1. Once you have switched to the container command prompt, move to the data volume directory:
+
+cd data
+2. Create an empty sample file using the command:
+
+touch sample1.txt
+3. Now, exit the container:
+
+exit
+4. Then, launch a new container example2 with the same data volume:
+
+docker run -it --name=example2 --mount source=data,destination=/data ubuntu
+5. List the content of the container. You should find the data directory, as in example1:
+
+ls
+6. Move to the data directory and list the content of it:
+
+cd data
+ls
+The output should list the sample1.txt file you created in the previous container (example1).
