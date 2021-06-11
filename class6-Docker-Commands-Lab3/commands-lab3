@@ -1,10 +1,3 @@
-Finding the version
-One of the first things you want to know is how to find the installed docker version.
-
-docker --version
-
-*******************************************************************************************************************************
-
 Downloading image
 Let’s say you need to pull the docker image from dockerhub (docker repository). The following example of pulling the Apache HTTP server image.
 
