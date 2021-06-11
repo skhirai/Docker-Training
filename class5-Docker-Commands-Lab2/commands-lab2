@@ -1,22 +1,24 @@
-*****************************************************
+*******************************************************************************************************************************
 To stop any running container
 
 docker stop $(docker ps -q)  
 
-*********************************************************
+*******************************************************************************************************************************
 To remove all the containers
 
 docker rm $(docker ps -a -q)
 
-*********************************
+*******************************************************************************************************************************
 
 To remove all docker images in a single command,
 [root@docker-host ~]# docker rmi $(docker images -a -q)
 
-*********************************************************************
+*******************************************************************************************************************************
 
 Remove all exited containers
-You can locate containers using docker ps -a and filter them by their status: created, restarting, running, paused, or exited. To review the list of exited containers, use the -f flag to filter based on status. When you've verified you want to remove those containers, using -q to pass the IDs to the docker rm command.
+You can locate containers using docker ps -a and filter them by their status: created, restarting, running, paused, or exited. 
+To review the list of exited containers, use the -f flag to filter based on status. 
+When you've verified you want to remove those containers, using -q to pass the IDs to the docker rm command.
 
 List:
 
@@ -30,12 +32,10 @@ Remove containers using more than one filter.Docker filters can be combined by r
 This results in a list of containers that meet either condition. 
 For example, if you want to delete all containers marked as either Created (a state which can result when you run a container with an invalid command) or Exited, you can use two filters:
 
-
+*******************************************************************************************************************************
 List:
 
-docker ps -a -f status=exited -f status=created
-
-Remove:
+docker ps -a -f status=exited -f status=createdRemove:
 
 docker rm $(docker ps -a -f status=exited -f status=created -q)
 
@@ -60,13 +60,6 @@ Remove:
 
 docker stop $(docker ps -a -q)
 docker rm $(docker ps -a -q)
-
-Remove a container and its volume
-If you created an unnamed volume, it can be deleted at the same time as the container with the -v flag. Note that this only works with unnamed volumes. When the container is successfully removed, its ID is displayed. Note that no reference is made to the removal of the volume. If it is unnamed, it is silently removed from the system. If it is named, it silently stays present.
-
-Remove:
-
-docker rm -v container_name
 
 to see the container statistics
 
