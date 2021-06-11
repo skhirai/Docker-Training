@@ -1,0 +1,192 @@
+Finding the version
+One of the first things you want to know is how to find the installed docker version.
+
+docker --version
+
+**************************************************************
+
+Downloading image
+Let’s say you need to pull the docker image from dockerhub (docker repository). The following example of pulling the Apache HTTP server image.
+
+docker pull httpd
+
+Images
+List all the docker images pulled on the system with image details such as TAG/IMAGE ID/SIZE etc.
+
+docker images
+
+**************************************************************
+Run
+Run the docker image mentioned in the command. This command will create a docker container in which the Apache HTTP server will run.
+
+docker run -it -d httpd
+
+
+**************************************************************
+What’s running?
+ps lists all the docker containers are running with container details.
+
+docker ps
+
+**************************************************************
+ps -a
+List all the docker containers running/exited/stopped with container details.
+
+docker ps -a
+
+**************************************************************
+exec
+Access the docker container and run commands inside the container. I am accessing the apache server container in this example.
+
+docker ps -a
+
+docker exec -it <container ID> bash
+
+root@09ca6feb6efc:/usr/local/apache2# ls
+
+bin  build  cgi-bin  conf  error  htdocs  icons  include  logs                modules
+
+root@09ca6feb6efc:/usr/local/apache2#
+
+**************************************************************
+Removing container
+
+docker ps -a
+
+
+Remove the docker container with container id mentioned in the command.
+
+docker rm <Container ID>
+
+
+**************************************************************
+
+Removing image
+Remove the docker image with the docker image id mentioned in the command
+
+docker images
+
+docker rmi <image ID>
+
+**************************************************************
+
+Restart Docker
+Restart the docker container with container id mentioned in the command.
+
+docker ps -a
+<Container ID>
+
+docker restart <Container ID>
+
+
+**************************************************************
+Stopping Docker
+Stop a container with container id mentioned in the command.
+
+docker ps -a
+<Container ID>
+
+docker stop <Container ID>
+
+**************************************************************
+
+
+Starting Docker
+This command in docker starts the docker container with container id mentioned in the command.
+
+docker ps -a
+<Container ID>
+
+docker start <Container ID>
+
+**************************************************************
+
+
+Kill
+Stop the docker container immediately. Docker stop command stops the container gracefully, that’s the difference between a kill and stop commands.
+
+docker kill <Container ID>
+
+
+*************************************************************
+
+Login
+Login into docker hub. You will be asked your docker hub credentials to log in.
+
+docker login
+
+Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
+
+Username: cloudnloud
+
+Password:
+
+*************************************************************
+
+Docker network
+The following command in docker lists the details of all the network in the cluster.
+
+docker network ls
+
+*************************************************************
+
+Docker info
+Get detailed information about docker installed on the system including the kernel version, number of containers and images, etc.
+
+docker info
+
+*************************************************************
+
+Copying file
+Copy a file from a docker container to the local system.
+
+In this example, I am copying httpd.pid file inside a docker container with id 09ca6feb6efc to /tmp
+
+sudo docker cp 09ca6feb6efc:/usr/local/apache2/logs/httpd.pid /tmp/
+
+
+ls /tmp
+
+*************************************************************
+
+Checking history
+Shows the history of a docker image with the image name mentioned in the command.
+
+docker history httpd
+
+
+*************************************************************
+Checking logs
+Show the logs of the docker container with contained id mentioned in the command.
+
+
+docker ps -a
+<Container ID>
+
+
+docker logs 09ca6feb6efc
+
+*************************************************************
+
+Searching image
+Search for a docker image on dockerhub with the name mentioned in the command.
+
+docker search centos
+
+*************************************************************
+
+
+Updating configuration
+Update container configurations. This shows all the update options.
+
+docker update --help
+ 
+*************************************************************
+
+
+Creating volume
+Create a volume which docker container will use to store data.
+
+docker volume create
+
+*************************************************************
