@@ -41,9 +41,9 @@ centos              latest              5182e96772bf        2 weeks ago         
 nginx               latest              c82521676580        4 weeks ago         109MB
 hello-world         latest              2cb0d9787c4d        6 weeks ago         1.85kB
 
-While building image itself set tagging --> docker build -t cloudnloud/cloud_local:latest .
+While building image itself set tagging --> docker build -t cloudnloud/cloud1_local:latest .
 
-After build image as a none tagging --> docker tag <image-id> cloudnloud/cloud_local:latest
+After build image as a none tagging --> docker tag <image-id> cloudnloud/cloud1_local:latest
 
 docker login 
 
@@ -74,9 +74,9 @@ CMD ["nginx", "-g", "daemon off;"]
 
 docker images
 
-While building image itself set tagging --> docker build -t cloudnloud/cloud_local:latest .
+While building image itself set tagging --> docker build -t cloudnloud/cloud1_local:latest .
 
-After build image as a none tagging --> docker tag <image-id> cloudnloud/cloud_local:latest
+After build image as a none tagging --> docker tag <image-id> cloudnloud/cloud1_local:latest
 
 docker login 
 
