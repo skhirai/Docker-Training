@@ -1,0 +1,220 @@
+What is dangling Docker image?
+
+A dangling image means that you've created a new build of the image but haven't given it a new name. Think about those old, forgotten images that no one knows what to do with anymore – those are "dangling images". They are left untagged and display <none> on their name when you run docker images 
+
+*************************************************************************************************************************************************************
+How do I stop Docker images from dangling?
+
+You can avoid this situation by providing a tag when you build, and you can retroactively tag an images with the docker tag command. 
+
+List: docker images -f dangling=true
+
+
+*************************************************************************************************************************************************************
+Prune unused Docker objects
+
+Docker takes a conservative approach to cleaning up unused objects (often referred to as “garbage collection”), such as images, containers, volumes, and networks: these objects are generally not removed unless you explicitly ask Docker to do so. This can cause Docker to use extra disk space. For each type of object, Docker provides a prune command. In addition, you can use docker system prune to clean up multiple types of objects at once. This topic shows how to use these prune commands.
+
+*************************************************************************************************************************************************************
+Prune images
+The docker image prune command allows you to clean up unused images. By default, docker image prune only cleans up dangling images. A dangling image is one that is not tagged and is not referenced by any container. To remove dangling images:
+
+$ docker image prune
+
+WARNING! This will remove all dangling images.
+Are you sure you want to continue? [y/N] y
+
+*************************************************************************************************************************************************************
+
+
+To remove all images which are not used by existing containers, use the -a flag:
+
+$ docker image prune -a
+
+WARNING! This will remove all images without at least one container associated to them.
+Are you sure you want to continue? [y/N] y
+By default, you are prompted to continue. To bypass the prompt, use the -f or --force flag.
+
+*************************************************************************************************************************************************************
+
+You can limit which images are pruned using filtering expressions with the --filter flag. For example, to only consider images created more than 24 hours ago:
+
+$ docker image prune -a --filter "until=24h"
+Other filtering expressions are available. See the docker image prune reference for more examples.
+*************************************************************************************************************************************************************
+Prune containers
+When you stop a container, it is not automatically removed unless you started it with the --rm flag. To see all containers on the Docker host, including stopped containers, use docker ps -a. You may be surprised how many containers exist, especially on a development system! A stopped container’s writable layers still take up disk space. To clean this up, you can use the docker container prune command.
+
+$ docker container prune
+
+WARNING! This will remove all stopped containers.
+Are you sure you want to continue? [y/N] y
+
+By default, you are prompted to continue. To bypass the prompt, use the -f or --force flag.
+
+By default, all stopped containers are removed. You can limit the scope using the --filter flag. For instance, the following command only removes stopped containers older than 24 hours:
+
+$ docker container prune --filter "until=24h"
+
+Other filtering expressions are available. See the docker container prune reference for more examples.
+
+*************************************************************************************************************************************************************
+
+Prune networks
+
+Docker networks don’t take up much disk space, but they do create iptables rules, bridge network devices, and routing table entries. To clean these things up, you can use docker network prune to clean up networks which aren’t used by any containers.
+
+$ docker network prune
+
+WARNING! This will remove all networks not used by at least one container.
+Are you sure you want to continue? [y/N] y
+By default, you are prompted to continue. To bypass the prompt, use the -f or --force flag.
+
+By default, all unused networks are removed. You can limit the scope using the --filter flag. For instance, the following command only removes networks older than 24 hours:
+
+$ docker network prune --filter "until=24h"
+Other filtering expressions are available. See the docker network prune reference for more examples.
+
+Prune everything
+The docker system prune command is a shortcut that prunes images, containers, and networks. Volumes are not pruned by default, and you must specify the --volumes flag for docker system prune to prune volumes.
+
+$ docker system prune
+
+WARNING! This will remove:
+        - all stopped containers
+        - all networks not used by at least one container
+        - all dangling images
+        - all build cache
+Are you sure you want to continue? [y/N] y
+
+
+To also prune volumes, add the --volumes flag:
+
+$ docker system prune --volumes
+
+WARNING! This will remove:
+        - all stopped containers
+        - all networks not used by at least one container
+        - all volumes not used by at least one container
+        - all dangling images
+        - all build cache
+Are you sure you want to continue? [y/N] y
+
+By default, you are prompted to continue. To bypass the prompt, use the -f or --force flag.
+
+*************************************************************************************************************************************************************
+
+The following example starts a Redis container and configures it to always restart unless it is explicitly stopped or Docker is restarted.
+
+$ docker run -d --restart unless-stopped redis
+
+This command changes the restart policy for an already running container named redis.
+
+$ docker update --restart unless-stopped redis
+
+And this command will ensure all currently running containers will be restarted unless stopped.
+
+$ docker update --restart unless-stopped $(docker ps -q)
+
+*************************************************************************************************************************************************************
+What Happens When an Application Crashes?
+
+Before we get started with Docker's restart policy, let's understand a bit more about how Docker behaves when an application crashes. To facilitate this, we'll create a Docker container that executes a simple bash script named crash.sh.
+
+#/bin/bash
+sleep 30
+exit 1
+The above script is simple; when started, it will sleep for 30 seconds, and then it will exit with an exit code of 1 indicating an error.
+
+
+Building and running a custom container
+
+In order to run this script within a container, we'll need to build a custom Docker container which includes the crash.sh script. In order to build a custom container, we first need to create a simple Dockerfile.
+
+$ vi Dockerfile
+
+The Dockerfile will contain the following three lines:
+
+FROM ubuntu:14.04
+ADD crash.sh /
+CMD /bin/bash /crash.sh
+
+The above Dockerfile will build a container based on the latest ubuntu:14.04 image. It will also add the crash.sh script into the / directory of the container. The final line tells Docker to execute the crash.sh script when the container is started.
+
+With the Dockerfile defined, we can now build our custom container using the docker build command.
+
+$ sudo docker build -t testing_restarts ./
+
+Sending build context to Docker daemon 3.072 kB
+Step 1 : FROM ubuntu:14.04
+ ---> e36c55082fa6
+Step 2 : ADD crash.sh /
+ ---> eb6057d904ef
+Removing intermediate container 5199db00ba76
+Step 3 : CMD /bin/bash /crash.sh
+ ---> Running in 01e6f5e12c3f
+ ---> 0e2f4ac52f19
+Removing intermediate container 01e6f5e12c3f
+Successfully built 0e2f4ac52f19
+
+This build command created a Docker image with a tagged name of testing_restarts. We can now start a container using the testing_restarts image by executing docker run.
+
+$ sudo docker run -d --name testing_restarts testing_restarts
+
+a35bb16634a029039c8b34dddba41854e9a5b95222d32e3ca5624787c4c8914a
+
+From the above, it appears that Docker was able to start a container named testing_restarts. Let's check the status of that container by running docker ps.
+
+$ sudo docker ps
+
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS
+The docker ps command doesn't show any running containers. The reason for this is because docker ps by default only shows running containers. Let's take a look at running and non-running containers by using the -a flag.
+
+$ sudo docker ps -a
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                     PORTS               NAMES
+a35bb16634a0        testing_restarts    "/bin/sh -c '/bin/bas"   9 minutes ago       Exited (1) 8 minutes ago
+
+With the docker ps results, we can see that when an application within a Docker container exits, that container is also stopped. This means that, by default, if an application that is running within a container crashes, the container stops and that container will remain stopped until someone or something restarts it.
+
+
+Changing Docker's Default Behavior
+
+It's possible to automatically restart crashed containers by specifying a restart policy when initiating the container. To understand restart policies better, let's see what happens when we use the always restart policy with this same container.
+
+$ sudo docker run -d --name testing_restarts --restart always testing_restarts
+
+8320e96172e4403cf6527df538fb7054accf3a55513deb12bb6a5535177c1f19
+
+In the above command, we specified that Docker should apply the always restart policy to this container via the --restart flag. Let's see what effect this has on our container by executing a docker ps again.
+
+$ sudo docker ps
+
+CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS               NAMES
+8320e96172e4        testing_restarts    "/bin/sh -c '/bin/bas"   About a minute ago   Up 21 seconds
+
+This time we can see that the container is up and running but only for 21 seconds. If we run docker ps again, we will see something interesting.
+
+$ sudo docker ps
+
+CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS               NAMES
+8320e96172e4        testing_restarts    "/bin/sh -c '/bin/bas"   About a minute ago   Up 19 seconds
+
+The second run shows the container has only been up for 19 seconds. This means that even though our application (crash.sh) continues to exit with an error, Docker is continuously restarting the container every time it exits.
+
+Now that we understand how restart policies can be used to change Docker's default behavior, let's take a look at what restart policies Docker has available.
+
+
+Docker's Restart Policy(ies)
+Docker currently has four restart policies:
+
+no
+
+on-failure
+
+unless-stopped
+
+always
+
+*************************************************************************************************************************************************************
+
+
