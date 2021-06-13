@@ -41,16 +41,13 @@ centos              latest              5182e96772bf        2 weeks ago         
 nginx               latest              c82521676580        4 weeks ago         109MB
 hello-world         latest              2cb0d9787c4d        6 weeks ago         1.85kB
 
-[root@server1 ~]# docker tag 6f3baff9b180 vijaycnl.com/httpdserver
-[root@server1 ~]# docker images
+While building image itself set tagging --> docker build -t cloudnloud/cloud_local:latest .
 
-REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
-vijaycnl.com/httpdserver   latest              6f3baff9b180        2 hours ago         200MB
-<none>                     <none>              3b1943a5f478        2 hours ago         200MB
-<none>                     <none>              7770d3b057fc        3 hours ago         362MB
-centos                     latest              5182e96772bf        2 weeks ago         200MB
-nginx                      latest              c82521676580        4 weeks ago         109MB
-hello-world                latest              2cb0d9787c4d        6 weeks ago         1.85kB
+After build image as a none tagging --> docker tag <image-id> cloudnloud/cloud_local:latest
+
+docker login 
+
+docker push cloudnloud/cloud_local:latest
 
 
 Explanation
@@ -64,19 +61,6 @@ Explanation
 
 [root@docker-host /]# docker images
 
-
-docker run -dit --name cloudnloud-web -p 8080:80 -v /var/tmp/:/usr/local/apache2/htdocs/ httpd:2.4
-
-8080 port --> base linux machine port
-80 --> docker image port
-/var/tmp/ --> base linux machine directory
-/usr/local/apache2/htdocs/ --> docker image directory -->(goto docker hub and check it)
-
-
-
-
-
-
 *********************************************************************************************************************
 
 Docker file 1
@@ -88,7 +72,7 @@ ADD index.html /usr/share/nginx/html/index.html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 
-*******************************************************
+docker images
 
 While building image itself set tagging --> docker build -t cloudnloud/cloud_local:latest .
 
@@ -97,3 +81,15 @@ After build image as a none tagging --> docker tag <image-id> cloudnloud/cloud_l
 docker login 
 
 docker push cloudnloud/cloud_local:latest
+
+*********************************************************************************************************************
+
+
+docker run -dit --name cloudnloud-web -p 8080:80 -v /var/tmp/:/usr/local/apache2/htdocs/ httpd:2.4
+
+8080 port --> base linux machine port
+80 --> docker image port
+/var/tmp/ --> base linux machine directory
+/usr/local/apache2/htdocs/ --> docker image directory -->(goto docker hub and check it)
+
+*********************************************************************************************************************
