@@ -10,6 +10,17 @@ You can avoid this situation by providing a tag when you build, and you can retr
 
 List: docker images -f dangling=true
 
+Vi Dockerfile
+
+FROM ubuntu:latest
+RUN apt update
+RUN apt install -y nginx
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+
+docker build . 
+
+docker images -f dangling=true
 
 *************************************************************************************************************************************************************
 Prune unused Docker objects
@@ -80,12 +91,6 @@ WARNING! This will remove all networks not used by at least one container.
 Are you sure you want to continue? [y/N] y
 By default, you are prompted to continue. To bypass the prompt, use the -f or --force flag.
 
-By default, all unused networks are removed. You can limit the scope using the --filter flag. For instance, 
-the following command only removes networks older than 24 hours:
-
-$ docker network prune --filter "until=24h"
-Other filtering expressions are available. See the docker network prune reference for more examples.
-
 Prune everything
 The docker system prune command is a shortcut that prunes images, containers, and networks. 
 Volumes are not pruned by default, and you must specify the --volumes flag for docker system prune to prune volumes.
@@ -118,11 +123,12 @@ By default, you are prompted to continue. To bypass the prompt, use the -f or --
 
 The following example starts a Redis container and configures it to always restart unless it is explicitly stopped or Docker is restarted.
 
-$ docker run -d --restart unless-stopped redis
-
+$ docker run -d --name=redis1 --restart unless-stopped redis
+docker run -d --name=redis2 --restart unless-stopped redis
 This command changes the restart policy for an already running container named redis.
 
-$ docker update --restart unless-stopped redis
+$ docker update --restart unless-stopped redis1
+docker update --restart unless-stopped redis2
 
 And this command will ensure all currently running containers will be restarted unless stopped.
 
@@ -159,7 +165,7 @@ The final line tells Docker to execute the crash.sh script when the container is
 
 With the Dockerfile defined, we can now build our custom container using the docker build command.
 
-$ sudo docker build -t testing_restarts ./
+$ sudo docker build -t testing_restarts .
 
 Sending build context to Docker daemon 3.072 kB
 Step 1 : FROM ubuntu:14.04
@@ -202,30 +208,15 @@ Changing Docker's Default Behavior
 It's possible to automatically restart crashed containers by specifying a restart policy when initiating the container. 
 To understand restart policies better, let's see what happens when we use the always restart policy with this same container.
 
-$ sudo docker run -d --name testing_restarts --restart always testing_restarts
+$ sudo docker run -d --name testing_restarts1 --restart always testing_restarts
 
-8320e96172e4403cf6527df538fb7054accf3a55513deb12bb6a5535177c1f19
 
 In the above command, we specified that Docker should apply the always restart policy to this container via the --restart flag. 
 Let's see what effect this has on our container by executing a docker ps again.
 
-$ sudo docker ps
-
-CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS               NAMES
-8320e96172e4        testing_restarts    "/bin/sh -c '/bin/bas"   About a minute ago   Up 21 seconds
-
-This time we can see that the container is up and running but only for 21 seconds. If we run docker ps again, we will see something interesting.
-
-$ sudo docker ps
-
-CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS               NAMES
-8320e96172e4        testing_restarts    "/bin/sh -c '/bin/bas"   About a minute ago   Up 19 seconds
-
-The second run shows the container has only been up for 19 seconds. 
-This means that even though our application (crash.sh) continues to exit with an error, Docker is continuously restarting the container every time it exits.
-
-Now that we understand how restart policies can be used to change Docker's default behavior, let's take a look at what restart policies Docker has available.
-
+[root@server bvijaycombea]# docker ps
+CONTAINER ID   IMAGE              COMMAND                  CREATED          STATUS                           PORTS      NAMES
+17dd85156668   testing_restarts   "/bin/sh -c '/bin/ba…"   21 seconds ago   Restarting (127) 5 seconds ago              testing_restarts1
 
 Docker's Restart Policy(ies)
 Docker currently has four restart policies:
