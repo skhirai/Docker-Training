@@ -5,7 +5,7 @@ go to hub.docker.com create one repo
  
 https://github.com/cloudnloud/travis_auto
 
-then goto https://travis-ci.com/ and sync this --> https://github.com/bvijaycom/travis-auto    ---- git hub repo.
+then goto https://travis-ci.com/ and sync this --> https://github.com/cloudnloud/travis_auto    ---- git hub repo.
 
 Then trigger it.
 
