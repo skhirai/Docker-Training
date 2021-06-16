@@ -29,7 +29,7 @@ docker images
 
 you can see there is new image created now
 
-
+***************************************************************************************************************
 
 
 docker run -dit --name cloudnloud-web -p 8087:80 681a02bc122b
@@ -38,13 +38,16 @@ docker run -dit --name cloudnloud-web -p 8087:80 681a02bc122b
 80 --> docker image port
 /var/tmp/ --> base linux machine directory
 /usr/local/apache2/htdocs/ --> docker image directory -->(goto docker hub and check it)
+681a02bc122b - Image id ..you change this from your docker images command output
 
-access machine ip : 8087 in browser
+***************************************************************************************************************
+access 
+<machine ip : 8087> in browser
 
 
 
 So now the custom image is working with whatever we changed.
-
+***************************************************************************************************************
 
 Prepare the image to push it to docker repository
 
@@ -63,7 +66,7 @@ To stop any running container
 
 docker stop $(docker ps -q)  
 
-*********************************************************
+***************************************************************************************************************
 To remove all the containers
 
 docker rm $(docker ps -a -q)
@@ -71,7 +74,7 @@ docker rm $(docker ps -a -q)
 
 To remove all docker images in a single command,
 [root@docker-host ~]# docker rmi $(docker images -a -q)
-
+***************************************************************************************************************
 
 Now you have clean environment
 
