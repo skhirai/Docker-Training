@@ -48,7 +48,21 @@ aa8ed7d04abd --> Container ID
 and curl -i <container ipaddress>
 
 ***********************************************************
+now delete all images.
+**************************************************************************************
+To stop any running container
 
+docker stop $(docker ps -q)  
+
+**************************************************************************************
+To remove all the containers
+
+docker rm $(docker ps -a -q)
+
+
+docker rmi $(docker images -a -q)
+
+**************************************************************************************
 
 
 version: '3'
