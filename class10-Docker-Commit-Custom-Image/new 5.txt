@@ -1,0 +1,83 @@
+How to manually commit docker images from docker container
+
+docker pull centos
+docker run -ti centos bash
+Now you are inside that container.From inside container now do the following
+ 
+ yum install httpd -y
+ 
+ [root@c0d27abd1cf1 /]# cd /var/www/html
+[root@c0d27abd1cf1 html]# ls
+[root@c0d27abd1cf1 html]# echo "Today i again failed.But i am happy that now i know how to do it" > index.html
+
+Login the same machine from another putty window and do the following
+
+docker ps -a
+
+docker images
+
+docker commit -c 'CMD ["/usr/sbin/httpd","-D","FOREGROUND"]' c0d27abd1cf1
+
+c0d27abd1cf1 --> container ID
+
+
+the above commit command will take the snapshot from running container c0d27abd1cf1
+
+now run 
+
+docker images
+
+you can see there is new image created now
+
+
+
+
+docker run -dit --name cloudnloud-web -p 8087:80 681a02bc122b
+  
+8087 port --> base linux machine port
+80 --> docker image port
+/var/tmp/ --> base linux machine directory
+/usr/local/apache2/htdocs/ --> docker image directory -->(goto docker hub and check it)
+
+access machine ip : 8087 in browser
+
+
+
+So now the custom image is working with whatever we changed.
+
+
+Prepare the image to push it to docker repository
+
+docker tag <image id> cloudnloud/custom_image:latest
+
+
+docker tag 681a02bc122b cloudnloud/custom_image:latest
+
+681a02bc122b
+docker push cloudnloud/custom_image:latest
+
+
+Now delete all images and containers (Stop and Delete)
+
+To stop any running container
+
+docker stop $(docker ps -q)  
+
+*********************************************************
+To remove all the containers
+
+docker rm $(docker ps -a -q)
+
+
+To remove all docker images in a single command,
+[root@docker-host ~]# docker rmi $(docker images -a -q)
+
+
+Now you have clean environment
+
+docker pull cloudnloud/custom_image:latest
+
+docker run -dit --name cloudnloud-web -p 8087:80 cloudnloud/custom_image:latest
+
+
+**************************************************************
