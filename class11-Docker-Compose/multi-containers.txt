@@ -1,0 +1,62 @@
+A Dockerfile is a simple text file that contains the commands a user could call to assemble an image whereas Docker Compose is a tool for defining and running multi-container Docker applications.
+
+Docker Compose define the services that make up your app in docker-compose.yml so they can be run together in an isolated environment. It get an app running in one command by just running docker-compose up.Docker compose uses the Dockerfile if one add the build command to your project’s docker-compose.yml. Your Docker workflow should be to build a suitable Dockerfile for each image you wish to create, then use compose to assemble the images using the build command.
+
+
+**************************************************************
+Docker Compose
+
+save the below in docker-compose.yaml
+
+version: "2"
+services:
+  webserver:
+    image: nginx
+    container_name: never
+    hostname: cloudnloud
+    ports:
+      - "80:80"
+    volumes:
+      - ./data:/usr/share/nginx/html/
+      
+
+
+create data directory and inside copy data directory copy index.html
+
+yum install docker-compose -y
+
+docker-compose up -d 
+
+then 
+
+get the container IP address 
+docker inspect aa8ed7d04abd
+
+(or)
+
+docker inspect aa8ed7d04abd | grep "IPAddress"
+
+
+aa8ed7d04abd --> Container ID
+
+and curl -i <container ipaddress>
+
+***********************************************************
+
+
+
+version: '3'
+services:
+  web:
+    image: nginx
+	ports:
+    - "80:80"
+  db:
+    image: mysql
+    ports:
+    - "3306:3306"
+    environment:
+    - MYSQL_ROOT_PASSWORD=password
+    - MYSQL_USER=user
+    - MYSQL_PASSWORD=password
+    - MYSQL_DATABASE=demodb
