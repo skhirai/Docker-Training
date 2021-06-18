@@ -1,0 +1,79 @@
+delete all images.
+**************************************************************************************
+To stop any running container
+
+docker stop $(docker ps -q)  
+
+**************************************************************************************
+To remove all the containers
+
+docker rm $(docker ps -a -q)
+
+
+docker rmi $(docker images -a -q)
+
+**************************************************************************************
+
+
+
+
+goto https://cloud.canister.io website
+
+create account and activate it
+
+create repsitory called cloud
+
+docker login --username=bvijaycom --password=XXXXXXX cloud.canister.io:5000
+
+now you will be logged into canister repository
+
+now we will build the new image
+
+docker pull centos
+docker run -dit centos
+
+docker ps -a--> get the contianer id
+
+docker exec -it 9f65dd0718fa bash
+
+yum install httpd net-tools vsftpd
+
+echo "I have all talents inside me.Just i want to know how to swim.rest i will smash it" > /var/www/html/index.html
+
+systemctl enable httpd
+systemctl enable vsftpd
+
+now come out and take snapshot of running container.
+
+docker commit -c 'CMD ["/usr/sbin/httpd","-D","FOREGROUND"]' 9f65dd0718fa
+
+now run docker images command and you will see one <none> image.
+
+docker tag 9eb486eaf79e cloud.canister.io:5000/cloudnloud/newapp:latest
+
+docker push cloud.canister.io:5000/cloudnloud/newapp:latest
+
+
+********************************************************
+now delete all images.
+************************************************
+To stop any running container
+
+docker stop $(docker ps -q)  
+
+*********************************************************
+To remove all the containers
+
+docker rm $(docker ps -a -q)
+
+
+docker rmi $(docker images -a -q)
+
+****************************************************************
+
+
+pull the new image and test it
+
+docker pull cloud.canister.io:5000/cloudnloud/newapp:latest
+
+cloud.canister.io in GUI repo wont show .coz it will takesome time to replicate.but pull command from your differnt machine or from your friend's machine will work which means your custom image is now available in your private repository.
