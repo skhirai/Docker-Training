@@ -141,3 +141,55 @@ docker images
 
 docker rmi <image ID>
 
+-------------------------------------------------------------
+watch -n 1 docker ps -a
+
+1. Stop a docker container
+docker stop container_name_or_ID
+
+2. Stop multiple docker containers
+docker stop container-1 container-2 container-3
+
+3. Stop all containers associated with an image
+docker ps -q --filter ancestor=IMAGE_NAME | xargs docker stop
+
+4. Stop all running docker containers
+docker ps -q | xargs docker stop
+
+5. Stop a container gracefully
+docker stop -t 30 container_name_or_id
+
+Removing All Unused Docker Objects
+docker system prune
+
+If you want to remove all unused images not just the dangling ones, add the -a (--all) option to the command:
+docker system prune -a
+
+To remove all unused volumes, pass the --volumes option:
+docker system prune --volumes
+
+Get list of Docker Containers
+docker container ls -a
+
+Remove the first two containers
+docker container rm cc3f2ff51cab cd20b396a061
+
+Removing all stopped containers
+docker container prune
+
+If you want to get a list of all non-running (stopped) containers that will be removed with docker container prune, use the following command:
+docker container ls -a --filter status=exited --filter status=created
+
+Remove all images created more than 12 hours ago
+docker container prune --filter "until=12h"
+
+Stop and remove all containers
+docker container stop $(docker container ls q)
+
+docker container rm $(docker container ls -aq)
+
+To remove dangling images
+docker image prune
+
+Removing all unused images
+docker image prune -a
