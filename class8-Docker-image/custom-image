@@ -54,7 +54,7 @@ Explanation
 1. Used FROM instruction to specify the image.
 2. Used MAINTAINER instruction to specify information about the author.
 3. Used RUN instruction to update all packages and install the httpd package
-4. Again used RUN instruction to create a homepage "index.html" under the apache default directory /var/www/html.
+4. Again used ADD instruction to create a homepage "index.html" under the apache default directory /var/www/html.
 5. Used EXPOSE instruction to open the listening port 80 of httpd service.
 6. Used CMD instruction to run a apache service command as an executable when container is launched.
 
